@@ -4,5 +4,5 @@
   - [x] Add eslint
   - [x] Config
   - [x] Sequelize
-  - [ ] express
+  - [x] express
   

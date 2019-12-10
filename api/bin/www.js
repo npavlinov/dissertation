@@ -1,6 +1,17 @@
 import config from '../config/config'
-import server from '../index';
+import app from '../index';
+// console.log(app)
+const env = process.env;
 
-server.listen(config.port, config.host, () => {
-  console.log('Server on:', config.serverUrl);
+export const nodeEnv = env.NODE_ENV || 'development';
+
+const port = env.PORT || config.api.port;
+const host = env.host || config.api.host;
+
+function serverUrl() {
+  return `http://${host}:${port}`;
+}
+
+app.listen(port, host, () => {
+  console.log('Server on:', serverUrl());
 })
