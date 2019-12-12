@@ -1,70 +1,45 @@
-import { Layout, Menu, Icon } from 'antd';
+import React, { useState } from 'react'
+import { Layout, Menu, Icon } from 'antd'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import routes from '../routes'
 
-const { SubMenu } = Menu;
-const { Sider } = Layout;
+const { SubMenu } = Menu
+const { Sider } = Layout
 
-class Navbar extends React.Component {
-  state = {
-    collapsed: false,
-  };
+function Navbar() {
+  const router = useRouter()
+  const [collapsed, setCollapsed] = useState(false)
+  const [selected, setSelected] = useState('1')
 
-  onCollapse = collapsed => {
-    console.log(collapsed);
-    this.setState({ collapsed });
-  };
-  render() {
-    return (
-      <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-        <div className="logo" />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
-            <span>Home</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="desktop" />
-            <span>Option 2</span>
-          </Menu.Item>
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <Icon type="user" />
-                <span>User</span>
-              </span>
-            }
-          >
-            <Menu.Item key="3">Tom</Menu.Item>
-            <Menu.Item key="4">Bill</Menu.Item>
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="team" />
-                <span>Team</span>
-              </span>
-            }
-          >
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9">
-            <Icon type="file" />
-            <span>File</span>
-          </Menu.Item>
-        </Menu>
-        <style jsx>{`
-          .logo {
-            height: 32px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 16px;
-          }
-      `}</style>
-      </Sider>
-    )
+  const onCollapse = collapsed => {
+    setCollapsed({ collapsed })
   }
+
+  return (
+    <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+      <div className="logo" />
+      <Menu theme="dark" selectedKeys={[router.pathname]} mode="inline">
+        {routes.map((route, key) => (
+          <Menu.Item key={route.route}>
+            <Link href={route.route}>
+              <a>
+                <Icon type={route.icon} />
+                <span>{route.name}</span>
+              </a>
+            </Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+      <style jsx>{`
+        .logo {
+          height: 32px;
+          background: rgba(255, 255, 255, 0.2);
+          margin: 16px;
+        }
+      `}</style>
+    </Sider>
+  )
 }
 
 export default Navbar
