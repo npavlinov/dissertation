@@ -4,7 +4,17 @@ import cors from 'cors'
 import routes from './routes'
 const app = express()
 
-app.use(cors())
+app.use(
+  cors({
+    credentials: true,
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Access-Control-Allow-Headers',
+    ],
+    origin: 'http://localhost:3000',
+  })
+)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 

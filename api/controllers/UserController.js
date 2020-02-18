@@ -1,34 +1,41 @@
 'use strict'
 
 import UserService from '../services/UserService'
-import config from '../config/config.json'
-
+import * as auth from '../utils/auth'
 export default class UserController {
   static async registerUser(req, res) {
     const username = req.body.username
     const password = req.body.password
 
-    const user = await UserService.getOne(username)
+    const checkUser = await UserService.getOne({ username })
 
-    if (user) {
+    if (checkUser) {
       return res.send('User with such username already exists.')
     }
 
-    const createRes = await UserService.create(username, password)
-    res.status(200).send(createRes.message)
+    const user = await UserService.create(username, password)
+    const token = auth.signToken(user.id)
+
+    res.status(200).send({ auth: true, token, message: 'User Registered!' })
   }
 
   static async loginUser(req, res) {
     const username = req.body.username
     const password = req.body.password
-
-    const user = await UserService.getOne(username)
+    const user = await UserService.getOne({ username })
 
     const checkPassword = await UserService.checkPassword(user, password)
-    if (checkPassword.auth) {
-      return res.status(200).send(checkPassword)
+    console.log(checkPassword)
+    const token = auth.signToken(user.id)
+
+    if (checkPassword) {
+      return res
+        .status(200)
+        .send({ auth: true, token, message: 'User Authenticated! ' })
     } else {
-      return res.status(403).send(checkPassword)
+      return res
+        .status(403)
+        .send({ auth: false, message: 'Password authentication failed!' })
     }
   }
 

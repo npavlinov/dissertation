@@ -1,22 +1,51 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Head from 'next/head'
+import fetch from 'isomorphic-unfetch'
+import getConfig from 'next/config'
 import 'antd/dist/antd.css'
 import './login.css'
 import Wrapper from '../../components/Wrapper'
 import { Form, Icon, Input, Button, Checkbox, Row } from 'antd'
+import { login } from '../../utils/auth'
+
+const { publicRuntimeConfig } = getConfig()
 
 function Login(props) {
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
+
+    const username = props.form.getFieldValue('username')
+    const password = props.form.getFieldValue('password')
+    console.log(JSON.stringify({ username, password }))
+
     props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values)
+      if (err) {
+        console.log(err)
       }
     })
-    alert(JSON.stringify(props.form.getFieldsValue()))
+
+    try {
+      const res = await fetch(`${publicRuntimeConfig.API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      if (res.status === 200) {
+        const { token } = await res.json()
+        login(token)
+      } else {
+        console.log('Login failed!')
+        let error = new Error(res.message)
+        error.response = response
+        throw error
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const { getFieldDecorator } = props.form
+
   return (
     <div>
       <Head>

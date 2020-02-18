@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import { Layout, Breadcrumb } from 'antd'
 import 'antd/dist/antd.css'
 import Wrapper from '../components/Wrapper'
+import WithAuth from '../components/WithAuth'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -25,4 +26,4 @@ const Home = () => (
   </div>
 )
 
-export default Home
+export default WithAuth(Home)
