@@ -4,6 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     'Device',
     {
       name: DataTypes.STRING,
+      ip: DataTypes.STRING,
+      connected: DataTypes.BOOLEAN,
     },
     {}
   )
