@@ -9,9 +9,15 @@ export default class UserService {
     })
   }
 
-  static async create(username, password) {
-    const hash = await bcrypt.hash(password, 10)
-    const user = await User.create({ username, password: hash })
+  static async create(data) {
+    const hash = await bcrypt.hash(data.password, 10)
+
+    const userParams = {
+      ...data,
+      password: hash,
+    }
+
+    const user = await User.create(userParams)
     return user
   }
 

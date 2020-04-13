@@ -7,7 +7,7 @@ import { Form, Icon, Input, Button, Checkbox, Row, Card } from 'antd'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
 import 'antd/dist/antd.css'
-import './login.css'
+// import './login.css'
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -15,8 +15,13 @@ function Login(props) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const username = props.form.getFieldValue('username')
-    const password = props.form.getFieldValue('password')
+    const registerObject = {
+      username: props.form.getFieldValue('username'),
+      firstName: props.form.getFieldValue('firstName'),
+      lastName: props.form.getFieldValue('lastName'),
+      email: props.form.getFieldValue('email'),
+      password: props.form.getFieldValue('password'),
+    }
 
     props.form.validateFields((err, values) => {
       if (err) {
@@ -25,11 +30,14 @@ function Login(props) {
     })
 
     try {
-      const res = await fetch(`${publicRuntimeConfig.API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      })
+      const res = await fetch(
+        `${publicRuntimeConfig.API_URL}/api/auth/register`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(registerObject),
+        }
+      )
       if (res.status === 200) {
         const { token } = await res.json()
         login(token)
@@ -69,6 +77,31 @@ function Login(props) {
                 )}
               </Form.Item>
               <Form.Item>
+                {getFieldDecorator('email', {
+                  rules: [
+                    { required: true, message: 'Please input your email!' },
+                    { type: 'email', message: 'Please enter a valid e-mail!' },
+                  ],
+                })(<Input placeholder="Email" />)}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('firstName', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your first name!',
+                    },
+                  ],
+                })(<Input placeholder="First Name" />)}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('lastName', {
+                  rules: [
+                    { required: true, message: 'Please input your last name!' },
+                  ],
+                })(<Input placeholder="Last Name" />)}
+              </Form.Item>
+              <Form.Item>
                 {getFieldDecorator('password', {
                   rules: [
                     { required: true, message: 'Please input your Password!' },
@@ -83,27 +116,19 @@ function Login(props) {
                 )}
               </Form.Item>
               <Form.Item style={{ margin: '0' }}>
-                {getFieldDecorator('remember', {
-                  valuePropName: 'checked',
-                  initialValue: true,
-                })(<Checkbox>Remember me</Checkbox>)}
-                <a className="login-form-forgot" href="">
-                  Forgot password
-                </a>
                 <Button
                   type="primary"
                   htmlType="submit"
                   className="login-form-button"
                 >
-                  Log in
+                  Register
                 </Button>
-                Or <a href="/register">register now!</a>
               </Form.Item>
             </Form>
           </Card>
         </div>
         <div style={{ textAlign: 'center', margin: '25px 0' }}>
-          <img src="/login.svg" alt="Login photo" height="250" />
+          <img src="/register.svg" alt="Login photo" height="250" />
         </div>
       </Wrapper>
     </div>

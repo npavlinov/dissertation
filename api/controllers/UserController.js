@@ -4,8 +4,7 @@ import UserService from '../services/UserService'
 import * as auth from '../utils/auth'
 export default class UserController {
   static async registerUser(req, res) {
-    const username = req.body.username
-    const password = req.body.password
+    const { username } = req.body
 
     const checkUser = await UserService.getOne({ username })
 
@@ -13,19 +12,26 @@ export default class UserController {
       return res.send('User with such username already exists.')
     }
 
-    const user = await UserService.create(username, password)
+    const user = await UserService.create(req.body)
     const token = auth.signToken(user.id)
 
     res.status(200).send({ auth: true, token, message: 'User Registered!' })
   }
 
   static async loginUser(req, res) {
+    console.log(req.body)
     const username = req.body.username
     const password = req.body.password
     const user = await UserService.getOne({ username })
 
+    if (!user) {
+      return res.status(403).send({
+        auth: false,
+        message: 'User with such username does not exist.',
+      })
+    }
+
     const checkPassword = await UserService.checkPassword(user, password)
-    console.log(checkPassword)
     const token = auth.signToken(user.id)
 
     if (checkPassword) {
