@@ -1,13 +1,13 @@
 import React from 'react'
 import Head from 'next/head'
-import Navbar from '../../components/Navbar'
 import { Layout, Breadcrumb } from 'antd'
 import 'antd/dist/antd.css'
-import Wrapper from '../../components/Wrapper'
+import Wrapper from '../components/Wrapper'
+import WithAuth from '../components/WithAuth'
 
 const { Header, Content, Footer } = Layout
 
-export default function Devices() {
+const Devices = () => {
   return (
     <div>
       <Head>
@@ -26,3 +26,5 @@ export default function Devices() {
     </div>
   )
 }
+
+export default WithAuth(Devices)

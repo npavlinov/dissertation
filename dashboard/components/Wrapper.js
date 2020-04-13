@@ -4,15 +4,16 @@ import { Layout } from 'antd'
 
 const { Content, Footer } = Layout
 
-const Wrapper = props => (
+const Wrapper = (props) => (
   <div>
     <Layout style={{ minHeight: '100vh' }}>
-      <Navbar />
+      {props.noNav ? '' : <Navbar />}
       <Layout>
-        <HeaderAlpha />
+        {props.noNav ? '' : <HeaderAlpha />}
         <Content style={{ margin: '0 30px' }}>{props.children}</Content>
         <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©2018 Created by Ant UED
+          COM3610 NodeJS Farming Devices Dashboard ©2020 <br></br> Created by
+          Nikolay Lyubomirov
         </Footer>
       </Layout>
     </Layout>

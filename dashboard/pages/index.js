@@ -1,11 +1,9 @@
 import React from 'react'
 import Head from 'next/head'
-import Navbar from '../components/Navbar'
 import { Layout, Breadcrumb } from 'antd'
 import 'antd/dist/antd.css'
 import Wrapper from '../components/Wrapper'
-
-const { Header, Content, Footer, Sider } = Layout
+import WithAuth from '../components/WithAuth'
 
 const Home = () => (
   <div>
@@ -25,4 +23,4 @@ const Home = () => (
   </div>
 )
 
-export default Home
+export default WithAuth(Home)
