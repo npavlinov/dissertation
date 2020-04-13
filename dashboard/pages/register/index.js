@@ -7,7 +7,6 @@ import { Form, Icon, Input, Button, Checkbox, Row, Card } from 'antd'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
 import 'antd/dist/antd.css'
-// import './login.css'
 
 const { publicRuntimeConfig } = getConfig()
 

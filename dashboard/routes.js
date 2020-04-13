@@ -9,4 +9,9 @@ export default [
     name: 'Devices',
     icon: 'mobile',
   },
+  {
+    route: '/profile',
+    name: 'Profile',
+    icon: 'user',
+  },
 ]

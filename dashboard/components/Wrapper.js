@@ -1,5 +1,4 @@
 import Navbar from './Navbar'
-import HeaderAlpha from './Header'
 import { Layout } from 'antd'
 
 const { Content, Footer } = Layout
@@ -9,7 +8,6 @@ const Wrapper = (props) => (
     <Layout style={{ minHeight: '100vh' }}>
       {props.noNav ? '' : <Navbar />}
       <Layout>
-        {props.noNav ? '' : <HeaderAlpha />}
         <Content style={{ margin: '0 30px' }}>{props.children}</Content>
         <Footer style={{ textAlign: 'center' }}>
           COM3610 NodeJS Farming Devices Dashboard ©2020 <br></br> Created by

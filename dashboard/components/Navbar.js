@@ -3,6 +3,7 @@ import { Layout, Menu, Icon } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import routes from '../routes'
+import { logout } from '../utils/auth'
 
 const { SubMenu } = Menu
 const { Sider } = Layout
@@ -12,7 +13,7 @@ function Navbar() {
   const [collapsed, setCollapsed] = useState(false)
   const [selected, setSelected] = useState('1')
 
-  const onCollapse = collapsed => {
+  const onCollapse = (collapsed) => {
     setCollapsed({ collapsed })
   }
 
@@ -30,6 +31,14 @@ function Navbar() {
             </Link>
           </Menu.Item>
         ))}
+        <Menu.Item onClick={logout}>
+          <Link>
+            <a>
+              <Icon type="logout" />
+              <span>Logout</span>
+            </a>
+          </Link>
+        </Menu.Item>
       </Menu>
       <style jsx>{`
         .logo {
