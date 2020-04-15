@@ -11,4 +11,13 @@ export default class DeviceController {
       throw new Error(err)
     }
   }
+
+  static async get(req, res) {
+    try {
+      const devices = await DeviceService.getAll({ username: req.username })
+      res.status(200).send(devices)
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
 }

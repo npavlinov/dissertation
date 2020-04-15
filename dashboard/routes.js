@@ -1,17 +1,23 @@
+import {
+  PieChartOutlined,
+  MobileOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
+
 export default [
   {
     route: '/',
     name: 'Home',
-    icon: 'pie-chart',
+    icon: <PieChartOutlined />,
   },
   {
     route: '/devices',
     name: 'Devices',
-    icon: 'mobile',
+    icon: <MobileOutlined />,
   },
   {
     route: '/profile',
     name: 'Profile',
-    icon: 'user',
+    icon: <UserOutlined />,
   },
 ]

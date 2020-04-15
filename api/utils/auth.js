@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import config from '../config/config.json'
 
 export function verifyToken(req, res, next) {
-  console.log(req.headers.authorization)
   const token = req.headers['x-access-token'] || req.headers['authorization']
 
   if (!token) {
@@ -16,13 +15,21 @@ export function verifyToken(req, res, next) {
     }
 
     req.id = decode.id
+    req.username = decode.username
     next()
   })
 }
 
-export function signToken(id) {
-  const token = jwt.sign({ id }, config.jwtSecret, {
-    expiresIn: 86400,
-  })
+export function signToken(user) {
+  const token = jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+    },
+    config.jwtSecret,
+    {
+      expiresIn: 86400,
+    }
+  )
   return token
 }

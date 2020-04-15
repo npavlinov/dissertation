@@ -19,7 +19,6 @@ export default class UserController {
   }
 
   static async loginUser(req, res) {
-    console.log(req.body)
     const username = req.body.username
     const password = req.body.password
     const user = await UserService.getOne({ username })
@@ -32,7 +31,7 @@ export default class UserController {
     }
 
     const checkPassword = await UserService.checkPassword(user, password)
-    const token = auth.signToken(user.id)
+    const token = auth.signToken(user)
 
     if (checkPassword) {
       return res
