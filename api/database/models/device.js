@@ -6,10 +6,12 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       ip: DataTypes.STRING,
       connected: DataTypes.BOOLEAN,
+      username: DataTypes.STRING,
+      fetchTime: DataTypes.INTEGER,
     },
     {}
   )
-  Device.associate = function(models) {
+  Device.associate = function (models) {
     // associations can be defined here
   }
   return Device

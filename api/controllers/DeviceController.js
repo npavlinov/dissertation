@@ -4,9 +4,16 @@ import DeviceService from '../services/DeviceService'
 
 export default class DeviceController {
   static async create(req, res) {
+    const deviceData = {
+      name: req.body.name,
+      ip: req.body.ip,
+      connected: false,
+      username: req.username,
+      fetchTime: req.body.fetchTime,
+    }
     try {
-      await DeviceService.create(req.body)
-      res.status(200).send('Device Created!')
+      await DeviceService.create(deviceData)
+      res.status(200).send({ message: 'Device Created!' })
     } catch (err) {
       throw new Error(err)
     }

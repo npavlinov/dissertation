@@ -12,7 +12,10 @@ export default class DeviceService {
   }
 
   static async getAll(args) {
-    return await Device.findAll({ where: args })
+    return await Device.findAll({
+      where: args,
+      attributes: ['name', 'ip', 'connected', 'fetchTime', 'id'],
+    })
   }
 
   static async remove(id) {

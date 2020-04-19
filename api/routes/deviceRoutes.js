@@ -6,7 +6,7 @@ import DeviceController from '../controllers/DeviceController'
 
 const router = new Router()
 
-router.route('/api/devices/').post(DeviceController.create)
+router.post('/api/devices', verifyToken, DeviceController.create)
 router.get('/api/devices/user', verifyToken, DeviceController.get)
 
 export default router
