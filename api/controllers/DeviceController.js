@@ -19,10 +19,19 @@ export default class DeviceController {
     }
   }
 
-  static async get(req, res) {
+  static async getAll(req, res) {
     try {
       const devices = await DeviceService.getAll({ username: req.username })
       res.status(200).send(devices)
+    } catch (err) {
+      throw new Error(err)
+    }
+  }
+
+  static async getOne(req, res) {
+    try {
+      const device = await DeviceService.get(req.params.id)
+      res.status(200).send(device)
     } catch (err) {
       throw new Error(err)
     }

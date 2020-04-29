@@ -19,10 +19,6 @@ module.exports = {
           allowNull: false,
           defaultValue: '',
         }),
-        queryInterface.addConstraint('Devices', ['username'], {
-          type: 'unique',
-          name: 'unique_username_devices',
-        }),
       ])
     } catch (err) {
       console.log(err)

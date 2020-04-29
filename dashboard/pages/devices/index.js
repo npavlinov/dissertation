@@ -122,9 +122,8 @@ Devices.getInitialProps = async function (ctx) {
         devices: returnDevices,
       }
     } else {
-      const { message } = data
       if (process.browser) {
-        notification('error', message)
+        notification('error', 'Something went wrong loading the devices!')
       }
     }
   } catch (err) {

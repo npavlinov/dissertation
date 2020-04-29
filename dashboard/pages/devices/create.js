@@ -7,35 +7,11 @@ import 'antd/dist/antd.css'
 import DeviceForm from '../../components/DeviceForm'
 import Wrapper from '../../components/Wrapper'
 import WithAuth from '../../components/WithAuth'
-import notification from '../../utils/notification'
-import { checkToken } from '../../utils/auth'
-
-const { Title } = Typography
 const { publicRuntimeConfig } = getConfig()
 
-const AddDevice = (props) => {
-  const handleSubmit = async (fields) => {
-    try {
-      const res = await fetch(`${publicRuntimeConfig.API_URL}/api/devices/`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: props.token,
-        },
-        body: JSON.stringify(fields),
-      })
-      const { message } = await res.json()
-      if (res.status === 200) {
-        notification('success', message)
-      } else {
-        notification('error', message)
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
+const { Title } = Typography
 
+const AddDevice = (props) => {
   return (
     <div>
       <Head>
@@ -45,7 +21,7 @@ const AddDevice = (props) => {
       <Wrapper>
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Title level={2}>Add Device</Title>
-          <DeviceForm handleSubmit={handleSubmit} />
+          <DeviceForm config={publicRuntimeConfig} token={props.token} />
         </div>
       </Wrapper>
     </div>

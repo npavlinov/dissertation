@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Select, Input, Button, Row, Col } from 'antd'
+import notification from '../utils/notification'
 
 const { Option } = Select
 
@@ -17,23 +18,28 @@ const validateMessages = {
 }
 
 function DeviceForm(props) {
-  const placeholders = props.device
-    ? { ...props.device }
-    : {
-        name: 'Name',
-        ip: 'IP',
-        fetchTime: 'Fetch Time',
-      }
-
   const ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm
 
   const handleSubmit = async (values) => {
-    const fields = {
-      name: values.name,
-      ip: values.ip,
-      fetchTime: values.fetchTime,
+    try {
+      const res = await fetch(`${props.config.API_URL}/api/devices/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: props.token,
+        },
+        body: JSON.stringify(values),
+      })
+      const { message } = await res.json()
+      if (res.status === 200) {
+        notification('success', message)
+      } else {
+        notification('error', message)
+      }
+    } catch (err) {
+      console.log(err)
     }
-    await props.handleSubmit(fields)
   }
 
   return (
@@ -44,7 +50,10 @@ function DeviceForm(props) {
       validateMessages={validateMessages}
     >
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-        <Input placeholder={placeholders.name} />
+        <Input
+          placeholder={props.device ? '' : 'Name'}
+          defaultValue={props.device ? props.device.name : ''}
+        />
       </Form.Item>
       <Form.Item
         name="ip"
@@ -57,14 +66,20 @@ function DeviceForm(props) {
           },
         ]}
       >
-        <Input placeholder={placeholders.ip} />
+        <Input
+          placeholder={props.device ? '' : 'IP'}
+          defaultValue={props.device ? props.device.ip : ''}
+        />
       </Form.Item>
       <Form.Item
         name="fetchTime"
         label="Fetch Time"
         rules={[{ required: true }]}
       >
-        <Select placeholder={placeholders.fetchTime}>
+        <Select
+          placeholder={props.device ? '' : 'Fetch Time'}
+          defaultValue={props.device ? props.device.fetchTime : ''}
+        >
           <Option value="60">1 min</Option>
           <Option value="300">5 min</Option>
           <Option value="3600">1 hour</Option>
