@@ -4,11 +4,8 @@ import { Form, Select, Input, Button, Row, Col } from 'antd'
 const { Option } = Select
 
 const layout = {
-  labelCol: {
-    span: 4,
-  },
   wrapperCol: {
-    span: 8,
+    span: 12,
   },
 }
 
@@ -24,63 +21,64 @@ function DeviceForm(props) {
   }
 
   return (
-    <Form
-      {...layout}
-      onFinish={handleSubmit}
-      className="device-form"
-      validateMessages={validateMessages}
-      initialValues={
-        props.device
-          ? {
-              name: props.device.name,
-              ip: props.device.ip,
-              fetchTime: props.device.fetchTime.toString(),
-            }
-          : null
-      }
-    >
-      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-        <Input placeholder={props.device ? '' : 'Name'} />
-      </Form.Item>
-      <Form.Item
-        name="ip"
-        label="IP"
-        rules={[
-          { required: true },
-          {
-            pattern: ipRegex,
-            message: 'Please enter a valid IP address!',
-          },
-        ]}
-      >
-        <Input placeholder={props.device ? '' : 'IP'} />
-      </Form.Item>
-      <Form.Item
-        name="fetchTime"
-        label="Fetch Time"
-        rules={[{ required: true }]}
-      >
-        <Select placeholder={props.device ? '' : 'Fetch Time'}>
-          <Option value="60">1 min</Option>
-          <Option value="300">5 min</Option>
-          <Option value="3600">1 hour</Option>
-          <Option value="21600">6 hour</Option>
-          <Option value="43200">12 hour</Option>
-          <Option value="86400">24 hour</Option>
-        </Select>
-      </Form.Item>
-      <Row>
-        <Col span={12} style={{ textAlign: 'right' }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
+    <Row justify="center" style={{ margin: '30px 0' }}>
+      <Col span={12}>
+        <Form
+          // {...layout}
+          onFinish={handleSubmit}
+          className="device-form"
+          validateMessages={validateMessages}
+          initialValues={
+            props.device
+              ? {
+                  name: props.device.name,
+                  ip: props.device.ip,
+                  fetchTime: props.device.fetchTime.toString(),
+                }
+              : null
+          }
+        >
+          <Form.Item name="name" rules={[{ required: true }]}>
+            <Input size="large" placeholder={props.device ? '' : 'Name'} />
+          </Form.Item>
+          <Form.Item
+            name="ip"
+            rules={[
+              { required: true },
+              {
+                pattern: ipRegex,
+                message: 'Please enter a valid IP address!',
+              },
+            ]}
           >
-            {props.device ? 'Edit' : 'Add'}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
+            <Input size="large" placeholder={props.device ? '' : 'IP'} />
+          </Form.Item>
+          <Form.Item name="fetchTime" rules={[{ required: true }]}>
+            <Select size="large" placeholder={props.device ? '' : 'Fetch Time'}>
+              <Option value="60">1 min</Option>
+              <Option value="300">5 min</Option>
+              <Option value="3600">1 hour</Option>
+              <Option value="21600">6 hour</Option>
+              <Option value="43200">12 hour</Option>
+              <Option value="86400">24 hour</Option>
+            </Select>
+          </Form.Item>
+          <Row justify="center">
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Button
+                block
+                size="large"
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                {props.device ? 'Edit' : 'Add'}
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Col>
+    </Row>
   )
 }
 
