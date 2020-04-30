@@ -1,87 +1,82 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
-import { Table, Button, Typography, Badge, Tooltip, Space } from 'antd'
-import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import useSWR, { mutate } from 'swr'
+import { Table, Button, Typography, Badge, Tooltip, Space, Modal } from 'antd'
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons'
 import 'antd/dist/antd.css'
 import Wrapper from '../../components/Wrapper'
 import WithAuth from '../../components/WithAuth'
 import notification from '../../utils/notification'
 
-import { checkToken } from '../../utils/auth'
+import fetcher from '../../utils/fetcher'
+import Loading from '../../components/Loading'
 
 const { Title } = Typography
+const { Column } = Table
+const { confirm } = Modal
+
 const { publicRuntimeConfig } = getConfig()
 
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'key',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Connected',
-    dataIndex: 'connected',
-    key: 'connected',
-    render: (text, record) =>
-      record.connected ? (
-        <div>
-          <Badge status="success" />
-          Connected
-        </div>
-      ) : (
-        <div>
-          <Badge status="error" />
-          Not Connected
-        </div>
-      ),
-  },
-  {
-    title: 'Fetch Time',
-    dataIndex: 'fetchTime',
-    key: 'fetchTime',
-    render: (text, record) => <div>{text / 60} min</div>,
-  },
-  {
-    title: 'IP',
-    dataIndex: 'ip',
-    key: 'ip',
-  },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: (text, record) => (
-      <Space>
-        <Tooltip title="edit">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<EditOutlined />}
-            href={`/devices/${record.id}`}
-          />
-        </Tooltip>
-        <Tooltip title="delete">
-          <Button
-            danger
-            type="primary"
-            shape="circle"
-            icon={<DeleteOutlined />}
-          />
-        </Tooltip>
-      </Space>
-    ),
-  },
-]
-
 const Devices = (props) => {
-  console.log(props.devices)
+  const { data } = useSWR(
+    [`${publicRuntimeConfig.API_URL}/api/devices`, 'GET', props.token],
+    fetcher
+  )
+
+  if (!data) {
+    return <Loading />
+  }
+
+  const showDeleteModal = (e, id) => {
+    console.log(data)
+    confirm({
+      title: 'Are you sure you want to delete this device?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Some descriptions',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      async onOk() {
+        try {
+          const res = await fetch(
+            `${publicRuntimeConfig.API_URL}/api/devices/${id}`,
+            {
+              method: 'DELETE',
+              credentials: 'include',
+              headers: { Authorization: props.token },
+            }
+          )
+          const resJson = await res.json()
+
+          const { message, devices } = resJson
+          console.log(devices)
+          if (res.status === 200) {
+            mutate([
+              `${publicRuntimeConfig.API_URL}/api/devices`,
+              'GET',
+              props.token,
+            ])
+            notification('success', message)
+          } else {
+            notification('error', message)
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      },
+      onCancel() {
+        console.log('Cancel')
+      },
+    })
+  }
+
   return (
     <div>
       <Head>
@@ -95,40 +90,70 @@ const Devices = (props) => {
             Add
           </Button>
         </div>
-        <Table dataSource={props.devices} columns={columns} />
+        <Table
+          dataSource={data.map((device, index) => {
+            return {
+              ...device,
+              key: index + 1,
+            }
+          })}
+        >
+          <Column title="ID" dataIndex="key" key="id" />
+          <Column title="Name" dataIndex="name" key="name" />
+          <Column
+            title="Fetch Time"
+            dataIndex="fetchTime"
+            key="fetchTime"
+            render={(fetchTime) => <div>{fetchTime / 60} min</div>}
+          />
+          <Column
+            title="Connected"
+            dataIndex="connected"
+            key="connected"
+            render={(text, record) =>
+              record.connected ? (
+                <div>
+                  <Badge status="success" />
+                  Connected
+                </div>
+              ) : (
+                <div>
+                  <Badge status="error" />
+                  Not Connected
+                </div>
+              )
+            }
+          />
+          <Column title="IP" dataIndex="ip" key="ip" />
+          <Column
+            title="Actions"
+            key="action"
+            render={(text, record) => (
+              <Space>
+                <Tooltip title="edit">
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<EditOutlined />}
+                    href={`/devices/${record.id}`}
+                  />
+                </Tooltip>
+                <Tooltip title="delete">
+                  <Button
+                    danger
+                    type="primary"
+                    shape="circle"
+                    icon={<DeleteOutlined />}
+                    onClick={(e) => showDeleteModal(e, record.id)}
+                  />
+                </Tooltip>
+              </Space>
+            )}
+          />
+        </Table>
       </Wrapper>
     </div>
   )
-}
-
-Devices.getInitialProps = async function (ctx) {
-  try {
-    const token = checkToken(ctx)
-    const res = await fetch(`${publicRuntimeConfig.API_URL}/api/devices/user`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: { Authorization: token },
-    })
-    const devices = await res.json()
-    const returnDevices = devices.map((device, index) => {
-      return {
-        ...device,
-        key: index + 1,
-      }
-    })
-
-    if (res.status === 200) {
-      return {
-        devices: returnDevices,
-      }
-    } else {
-      if (process.browser) {
-        notification('error', 'Something went wrong loading the devices!')
-      }
-    }
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 export default WithAuth(Devices)

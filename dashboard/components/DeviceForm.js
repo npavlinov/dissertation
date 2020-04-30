@@ -1,6 +1,5 @@
 import React from 'react'
 import { Form, Select, Input, Button, Row, Col } from 'antd'
-import notification from '../utils/notification'
 
 const { Option } = Select
 
@@ -21,25 +20,7 @@ function DeviceForm(props) {
   const ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm
 
   const handleSubmit = async (values) => {
-    try {
-      const res = await fetch(`${props.config.API_URL}/api/devices/`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: props.token,
-        },
-        body: JSON.stringify(values),
-      })
-      const { message } = await res.json()
-      if (res.status === 200) {
-        notification('success', message)
-      } else {
-        notification('error', message)
-      }
-    } catch (err) {
-      console.log(err)
-    }
+    await props.handleSubmit(values)
   }
 
   return (
@@ -48,12 +29,18 @@ function DeviceForm(props) {
       onFinish={handleSubmit}
       className="device-form"
       validateMessages={validateMessages}
+      initialValues={
+        props.device
+          ? {
+              name: props.device.name,
+              ip: props.device.ip,
+              fetchTime: props.device.fetchTime.toString(),
+            }
+          : null
+      }
     >
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-        <Input
-          placeholder={props.device ? '' : 'Name'}
-          defaultValue={props.device ? props.device.name : ''}
-        />
+        <Input placeholder={props.device ? '' : 'Name'} />
       </Form.Item>
       <Form.Item
         name="ip"
@@ -66,20 +53,14 @@ function DeviceForm(props) {
           },
         ]}
       >
-        <Input
-          placeholder={props.device ? '' : 'IP'}
-          defaultValue={props.device ? props.device.ip : ''}
-        />
+        <Input placeholder={props.device ? '' : 'IP'} />
       </Form.Item>
       <Form.Item
         name="fetchTime"
         label="Fetch Time"
         rules={[{ required: true }]}
       >
-        <Select
-          placeholder={props.device ? '' : 'Fetch Time'}
-          defaultValue={props.device ? props.device.fetchTime : ''}
-        >
+        <Select placeholder={props.device ? '' : 'Fetch Time'}>
           <Option value="60">1 min</Option>
           <Option value="300">5 min</Option>
           <Option value="3600">1 hour</Option>
@@ -95,7 +76,7 @@ function DeviceForm(props) {
             htmlType="submit"
             className="login-form-button"
           >
-            Add
+            {props.device ? 'Edit' : 'Add'}
           </Button>
         </Col>
       </Row>
