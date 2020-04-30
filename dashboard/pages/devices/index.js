@@ -13,10 +13,10 @@ import {
 import 'antd/dist/antd.css'
 import Wrapper from '../../components/Wrapper'
 import WithAuth from '../../components/WithAuth'
-import notification from '../../utils/notification'
-
-import fetcher from '../../utils/fetcher'
 import Loading from '../../components/Loading'
+import notification from '../../utils/notification'
+import fetcher from '../../utils/fetcher'
+import time from '../../utils/time'
 
 const { Title } = Typography
 const { Column } = Table
@@ -104,7 +104,7 @@ const Devices = (props) => {
             title="Fetch Time"
             dataIndex="fetchTime"
             key="fetchTime"
-            render={(fetchTime) => <div>{fetchTime / 60} min</div>}
+            render={(fetchTime) => <div>{time(fetchTime)}</div>}
           />
           <Column
             title="Connected"

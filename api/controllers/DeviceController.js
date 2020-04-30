@@ -12,18 +12,30 @@ export default class DeviceController {
       fetchTime: req.body.fetchTime,
     }
     try {
-      await DeviceService.create(deviceData)
-      res.status(200).send({ message: 'Device Created!' })
+      if (await DeviceService.checkIp(deviceData)) {
+        res.status(500).send({ message: 'Device with such IP already exists!' })
+      } else {
+        await DeviceService.create(deviceData)
+        res.status(200).send({ message: 'Device Created!' })
+      }
     } catch (err) {
       throw new Error(err)
     }
   }
 
   static async update(req, res) {
+    const deviceId = req.params.id
+    const dataForIpCheck = {
+      username: req.username,
+      ip: req.body.ip,
+    }
     try {
-      const deviceId = req.params.id
-      await DeviceService.update(req.body, deviceId)
-      res.status(200).send({ message: 'Device Updated!' })
+      if (await DeviceService.checkIp(dataForIpCheck)) {
+        res.status(500).send({ message: 'Device with such IP already exists!' })
+      } else {
+        await DeviceService.update(req.body, deviceId)
+        res.status(200).send({ message: 'Device Updated!' })
+      }
     } catch (err) {
       console.log(err)
       res.status(500).send({ message: 'Something went wrong!' })
@@ -31,6 +43,7 @@ export default class DeviceController {
   }
 
   static async getAll(req, res) {
+    console.log(req.username)
     try {
       const devices = await DeviceService.getAll({ username: req.username })
       res.status(200).send(devices)
