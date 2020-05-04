@@ -3,38 +3,23 @@ import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import Wrapper from '../../components/Wrapper'
-import { Form, Icon, Input, Button, Checkbox, Row, Card } from 'antd'
+import { Form, Input, Button, Checkbox, Row, Card } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
 import 'antd/dist/antd.css'
 
 const { publicRuntimeConfig } = getConfig()
 
-function Login(props) {
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const registerObject = {
-      username: props.form.getFieldValue('username'),
-      firstName: props.form.getFieldValue('firstName'),
-      lastName: props.form.getFieldValue('lastName'),
-      email: props.form.getFieldValue('email'),
-      password: props.form.getFieldValue('password'),
-    }
-
-    props.form.validateFields((err, values) => {
-      if (err) {
-        console.log(err)
-      }
-    })
-
+function Register(props) {
+  const handleSubmit = async (values) => {
     try {
       const res = await fetch(
         `${publicRuntimeConfig.API_URL}/api/auth/register`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(registerObject),
+          body: JSON.stringify(values),
         }
       )
       if (res.status === 200) {
@@ -49,70 +34,68 @@ function Login(props) {
     }
   }
 
-  const { getFieldDecorator } = props.form
-
   return (
     <div>
       <Head>
-        <title>Login</title>
+        <title>Register</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper noNav>
         <div className="site-card-border-less-wrapper">
           <Card style={{ margin: '30px auto' }}>
-            <Form onSubmit={handleSubmit} className="login-form">
-              <Form.Item>
-                {getFieldDecorator('username', {
-                  rules: [
-                    { required: true, message: 'Please input your username!' },
-                  ],
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                    }
-                    placeholder="Username"
-                  />
-                )}
+            <Form onFinish={handleSubmit} className="register-form">
+              <Form.Item
+                name="username"
+                rules={[
+                  { required: true, message: 'Please enter your username!' },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
+                />
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('email', {
-                  rules: [
-                    { required: true, message: 'Please input your email!' },
-                    { type: 'email', message: 'Please enter a valid e-mail!' },
-                  ],
-                })(<Input placeholder="Email" />)}
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: 'Please input your email!' },
+                  { type: 'email', message: 'Please enter a valid e-mail!' },
+                ]}
+              >
+                <Input placeholder="Email" />
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('firstName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your first name!',
-                    },
-                  ],
-                })(<Input placeholder="First Name" />)}
+              <Form.Item
+                name="firstName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your first name!',
+                  },
+                ]}
+              >
+                <Input placeholder="First Name" />
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('lastName', {
-                  rules: [
-                    { required: true, message: 'Please input your last name!' },
-                  ],
-                })(<Input placeholder="Last Name" />)}
+              <Form.Item
+                name="lastName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your last name!',
+                  },
+                ]}
+              >
+                <Input placeholder="Last Name" />
               </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('password', {
-                  rules: [
-                    { required: true, message: 'Please input your Password!' },
-                  ],
-                })(
-                  <Input.Password
-                    prefix={
-                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                    }
-                    placeholder="Password"
-                  />
-                )}
+              <Form.Item
+                name="password"
+                rules={[
+                  { required: true, message: 'Please enter your password!' },
+                ]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Password"
+                />
               </Form.Item>
               <Form.Item style={{ margin: '0' }}>
                 <Button
@@ -134,6 +117,4 @@ function Login(props) {
   )
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Login)
-
-export default WrappedNormalLoginForm
+export default Register

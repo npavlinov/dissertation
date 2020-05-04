@@ -4,11 +4,11 @@
 import { useEffect } from 'react'
 import { checkToken } from '../utils/auth'
 
-const WithAuth = Component => {
-  const WrappedAuthComponent = props => {
-    const eventLogout = event => {
+const WithAuth = (Component) => {
+  const WrappedAuthComponent = (props) => {
+    const eventLogout = (event) => {
       if (event.key === 'logout') {
-        Router.push('/login');
+        Router.push('/login')
       }
     }
 
@@ -24,13 +24,15 @@ const WithAuth = Component => {
     return <Component {...props} />
   }
 
-  WrappedAuthComponent.getInitialProps = async ctx => {
-    const token = checkToken(ctx);
+  WrappedAuthComponent.getInitialProps = async (ctx) => {
+    const token = checkToken(ctx)
 
-    const componentProps = Component.getInitialProps && (await Component.getInitialProps(ctx));
+    const componentProps =
+      Component.getInitialProps && (await Component.getInitialProps(ctx))
 
-    return { ...componentProps, token };
+    return { ...componentProps, token }
   }
+
   return WrappedAuthComponent
 }
 

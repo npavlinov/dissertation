@@ -5,14 +5,17 @@ export default class DeviceService {
     return await Device.create(device)
   }
 
-  static async get(id) {
+  static async getOne(args) {
     return await Device.findOne({
-      where: { id },
+      where: args,
     })
   }
 
   static async getAll(args) {
-    return await Device.findAll({ where: args })
+    return await Device.findAll({
+      where: args,
+      attributes: ['name', 'ip', 'connected', 'fetchTime', 'id'],
+    })
   }
 
   static async remove(id) {

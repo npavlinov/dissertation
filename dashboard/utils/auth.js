@@ -3,7 +3,7 @@ import redirect from './redirect'
 import cookie from 'js-cookie'
 import Router from 'next/router'
 
-export const checkToken = ctx => {
+export const checkToken = (ctx) => {
   const { token } = nextCookie(ctx)
   if (!token) {
     redirect(ctx, '/login')
@@ -12,8 +12,8 @@ export const checkToken = ctx => {
   return token
 }
 
-export const login = token => {
-  cookie.set('token', token, { expires: 86400 })
+export const login = (token) => {
+  cookie.set('token', token, { expires: 1 })
   Router.push('/')
 }
 

@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Icon } from 'antd'
+import { Layout, Menu } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import routes from '../routes'
 import { logout } from '../utils/auth'
+import { LogoutOutlined } from '@ant-design/icons'
 
-const { SubMenu } = Menu
 const { Sider } = Layout
 
 function Navbar() {
   const router = useRouter()
   const [collapsed, setCollapsed] = useState(false)
-  const [selected, setSelected] = useState('1')
 
   const onCollapse = (collapsed) => {
-    setCollapsed({ collapsed })
+    setCollapsed(collapsed)
   }
 
   return (
@@ -25,16 +24,16 @@ function Navbar() {
           <Menu.Item key={route.route}>
             <Link href={route.route}>
               <a>
-                <Icon type={route.icon} />
+                {route.icon}
                 <span>{route.name}</span>
               </a>
             </Link>
           </Menu.Item>
         ))}
         <Menu.Item onClick={logout}>
-          <Link>
+          <Link href="">
             <a>
-              <Icon type="logout" />
+              <LogoutOutlined />
               <span>Logout</span>
             </a>
           </Link>

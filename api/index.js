@@ -3,13 +3,10 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import WebSocket from 'ws'
 import routes from './routes'
-const app = express()
-// const ws = new WebSocket('ws://192.168.0.111:80')
-// const wsServer = new WebSocket.Server({server: app});
+import SocketController from './controllers/SocketController'
 
-// dns.lookup(os.hostname(), (err, add, fam) => {
-//   console.log('addr: ', add)
-// })
+const app = express()
+const wss = new WebSocket.Server({ port: 8080 })
 
 app.use(
   cors({
@@ -31,21 +28,6 @@ app.get('/api/ping', (req, res) => {
   res.json({ msg: 'pong' })
 })
 
-// ws.on('open', function open() {
-//   console.log('connected')
-//   ws.send('message');
-// });
-// wsServer.on('connection', (ws, req) => {
-//   ws.on('message', (message) => {
-//     console.log('Received: ', message)
-//   });
-
-//   ws.on('close', () => {
-//     console.log('Connection lost')
-//   })
-
-//   console.log("new client connected");
-// })
-
+SocketController.runSockets(wss)
 
 export default app
