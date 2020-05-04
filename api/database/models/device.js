@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   )
   Device.associate = function (models) {
-    // associations can be defined here
+    Device.hasMany(models.DeviceData)
   }
   return Device
 }

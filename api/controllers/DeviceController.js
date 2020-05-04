@@ -12,31 +12,25 @@ export default class DeviceController {
       fetchTime: req.body.fetchTime,
     }
     try {
-      if (await DeviceService.checkIp(deviceData)) {
-        res.status(500).send({ message: 'Device with such IP already exists!' })
-      } else {
-        await DeviceService.create(deviceData)
-        res.status(200).send({ message: 'Device Created!' })
-      }
+      await DeviceService.create(deviceData)
+      res.status(200).send({ message: 'Device Created!' })
     } catch (err) {
+      if ((err.name = 'SequelizeUniqueConstraintError')) {
+        res.status(500).send({ message: 'Device with such IP already exists!' })
+      }
       throw new Error(err)
     }
   }
 
   static async update(req, res) {
     const deviceId = req.params.id
-    const dataForIpCheck = {
-      username: req.username,
-      ip: req.body.ip,
-    }
     try {
-      if (await DeviceService.checkIp(dataForIpCheck)) {
-        res.status(500).send({ message: 'Device with such IP already exists!' })
-      } else {
-        await DeviceService.update(req.body, deviceId)
-        res.status(200).send({ message: 'Device Updated!' })
-      }
+      await DeviceService.update(req.body, deviceId)
+      res.status(200).send({ message: 'Device Updated!' })
     } catch (err) {
+      if ((err.name = 'SequelizeUniqueConstraintError')) {
+        res.status(500).send({ message: 'Device with such IP already exists!' })
+      }
       console.log(err)
       res.status(500).send({ message: 'Something went wrong!' })
     }
@@ -54,7 +48,7 @@ export default class DeviceController {
 
   static async getOne(req, res) {
     try {
-      const device = await DeviceService.get(req.params.id)
+      const device = await DeviceService.getOne({ id: req.params.id })
       res.status(200).send(device)
     } catch (err) {
       throw new Error(err)

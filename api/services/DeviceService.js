@@ -1,24 +1,13 @@
 import { Device } from '../database/models'
 
 export default class DeviceService {
-  static async checkIp(deviceData) {
-    const device = await Device.findOne({
-      where: {
-        username: deviceData.username,
-        ip: deviceData.ip,
-      },
-    })
-
-    return device ? true : false
-  }
-
   static async create(device) {
     return await Device.create(device)
   }
 
-  static async get(id) {
+  static async getOne(args) {
     return await Device.findOne({
-      where: { id },
+      where: args,
     })
   }
 
