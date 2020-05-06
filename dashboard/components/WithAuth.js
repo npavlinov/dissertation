@@ -30,7 +30,7 @@ const WithAuth = (Component) => {
     const componentProps =
       Component.getInitialProps && (await Component.getInitialProps(ctx))
 
-    return { ...componentProps, token }
+    return { ...componentProps, ...token }
   }
 
   return WrappedAuthComponent

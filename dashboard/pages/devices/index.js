@@ -114,12 +114,12 @@ const Devices = (props) => {
               record.connected ? (
                 <div>
                   <Badge status="success" />
-                  Connected
+                  Active
                 </div>
               ) : (
                 <div>
                   <Badge status="error" />
-                  Not Connected
+                  Inactive
                 </div>
               )
             }

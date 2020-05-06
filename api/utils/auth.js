@@ -16,6 +16,8 @@ export function verifyToken(req, res, next) {
 
     req.id = decode.id
     req.username = decode.username
+    req.firstName = decode.firstName
+    req.lastName = decode.lastName
     next()
   })
 }
@@ -25,6 +27,8 @@ export function signToken(user) {
     {
       id: user.id,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
     },
     config.jwtSecret,
     {
