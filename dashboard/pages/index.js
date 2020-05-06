@@ -152,9 +152,7 @@ const Home = (props) => {
               />
             </Card>
           </Col>
-          {/* <Col span={8} className="gutter-row">
-            <Card></Card>
-          </Col> */}
+
           <Col span={16} className="gutter-row">
             <Card
               actions={[
