@@ -1,6 +1,7 @@
 import nextCookie from 'next-cookies'
 import redirect from './redirect'
 import cookie from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 import Router from 'next/router'
 
 export const checkToken = (ctx) => {
@@ -9,7 +10,9 @@ export const checkToken = (ctx) => {
     redirect(ctx, '/login')
   }
 
-  return token
+  const decodedToken = jwt_decode(token)
+
+  return { ...decodedToken, token }
 }
 
 export const login = (token) => {
