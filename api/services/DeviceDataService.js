@@ -1,4 +1,4 @@
-import { DeviceData } from '../database/models'
+import { DeviceData, Device } from '../database/models'
 
 export default class DeviceService {
   static async create(data) {
@@ -11,11 +11,20 @@ export default class DeviceService {
     })
   }
 
-  static async getAll(args) {
-    return await DeviceData.findAll({
+  static async getAll(args, limit) {
+    const devices = await Device.findAll({
       where: args,
-      attributes: ['data', 'deviceId', 'fetchTime', 'id'],
     })
+    const devicesData = await Promise.all(
+      devices.map(async (device) => {
+        return await device.getDeviceData({
+          limit: limit || null,
+          order: [['createdAt', 'DESC']],
+          // attributes: ['data'],
+        })
+      })
+    )
+    return devicesData
   }
 
   static async remove(id) {

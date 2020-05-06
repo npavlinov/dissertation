@@ -37,7 +37,6 @@ export default class DeviceController {
   }
 
   static async getAll(req, res) {
-    console.log(req.username)
     try {
       const devices = await DeviceService.getAll({ username: req.username })
       res.status(200).send(devices)
