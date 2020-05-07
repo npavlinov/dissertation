@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 
-export default async function (url, type, token) {
-  return await fetch(url, {
+export default function (url, type, token) {
+  return fetch(url, {
     method: type,
     credentials: 'include',
     headers: { Authorization: token },

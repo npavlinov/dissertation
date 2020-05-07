@@ -36,8 +36,6 @@ const { TabPane } = Tabs
 const { publicRuntimeConfig } = getConfig()
 
 const Home = (props) => {
-  const [selectedTab, setSelectedTab] = useState(1)
-
   const [donutChart, setDonutChart] = useState({
     series: [0],
     options: {
@@ -56,6 +54,7 @@ const Home = (props) => {
     },
   })
 
+  // We need both of these calls, since some of the devices may not have data
   const { data: devices } = useSWR(
     [`${publicRuntimeConfig.API_URL}/api/devices`, 'GET', props.token],
     fetcher
@@ -156,7 +155,7 @@ const Home = (props) => {
           <Col span={16} className="gutter-row">
             <Card
               actions={[
-                <Link href={`/manage/${selectedTab}`}>
+                <Link href={`/manage`}>
                   <a>
                     <PieChartOutlined />
                     <span> See Device Statistics</span>
@@ -164,12 +163,7 @@ const Home = (props) => {
                 </Link>,
               ]}
             >
-              <Tabs
-                defaultActiveKey="1"
-                tabPosition="left"
-                style={{ height: 305 }}
-                onChange={(key) => setSelectedTab(key)}
-              >
+              <Tabs tabPosition="left" style={{ height: 305 }} size="large">
                 {devices.map((device, id) => (
                   <TabPane tab={device.name} key={device.id}>
                     <Row
@@ -205,25 +199,25 @@ const Home = (props) => {
                         <Col span={6}>
                           <Statistic
                             title="pH Levels"
-                            value={devicesData[id][0].data.pH}
+                            value={devicesData[id][0].pH}
                           />
                         </Col>
                         <Col span={6}>
                           <Statistic
                             title="Water Levels"
-                            value={devicesData[id][0].data.waterLevels}
+                            value={devicesData[id][0].waterLevels}
                           />
                         </Col>
                         <Col span={6}>
                           <Statistic
                             title="Water Temperature"
-                            value={devicesData[id][0].data.waterTemperature}
+                            value={devicesData[id][0].waterTemperature}
                           />
                         </Col>
                         <Col span={6}>
                           <Statistic
                             title="Air Temperature"
-                            value={devicesData[id][0].data.airTemperature}
+                            value={devicesData[id][0].airTemperature}
                           />
                         </Col>
                       </Row>

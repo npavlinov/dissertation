@@ -17,11 +17,14 @@ export default class DeviceService {
     })
     const devicesData = await Promise.all(
       devices.map(async (device) => {
-        return await device.getDeviceData({
-          limit: limit || null,
-          order: [['createdAt', 'DESC']],
-          // attributes: ['data'],
-        })
+        return await device
+          .getDeviceData({
+            limit: limit || null,
+            order: [['createdAt', 'DESC']],
+            attributes: ['data'],
+            raw: true,
+          })
+          .map((device) => device.data)
       })
     )
     return devicesData
