@@ -7,7 +7,6 @@ function Loading() {
   return (
     <div>
       <Head>
-        <title>Edit Device</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>

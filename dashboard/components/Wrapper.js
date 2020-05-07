@@ -10,8 +10,8 @@ const Wrapper = (props) => (
       <Layout>
         <Content style={{ margin: '30px' }}>{props.children}</Content>
         <Footer style={{ textAlign: 'center' }}>
-          COM3610 NodeJS Farming Devices Dashboard ©2020 <br></br> Created by
-          Nikolay Lyubomirov
+          COM3610 NodeJS Farming Devices Dashboard <br></br> Created by Nikolay
+          Lyubomirov
         </Footer>
       </Layout>
     </Layout>
