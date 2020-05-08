@@ -4,7 +4,7 @@ import DeviceService from '../services/DeviceService'
 import DeviceDataService from '../services/DeviceDataService'
 import events from 'events'
 
-const eventEmitter = new events.EventEmitter()
+const event = new events.EventEmitter()
 /**
  * This class is a Controller for the websocket server,
  * which will act as a connection between the devices and the dashboard
@@ -22,6 +22,7 @@ export default class SocketController {
    * @param {Object} wss the websocket server
    */
   static async runSockets(wss) {
+    let sockets = {}
     wss.on('connection', async (ws, req) => {
       // get all devices
       const devices = await DeviceService.getAll({})
@@ -34,11 +35,13 @@ export default class SocketController {
 
       // check if the device's IP is included in the DB
       if (!deviceIps.includes(requestIp)) {
+        req.reject()
         console.log('Device is not present in the database')
-        ws.close()
         return
       }
 
+      sockets[requestIp] = ws
+      // console.log(sockets)
       // get device per IP
       const device = await DeviceService.getOne({ ip: requestIp })
 
@@ -63,7 +66,11 @@ export default class SocketController {
         console.log('Connection lost')
       })
 
-      event.on('sendSetting', (setting) => {})
+      event.on('sendSetting', (setting) => {
+        // console.log(setting)
+        const socketToSendTo = sockets[setting.Device.ip]
+        socketToSendTo.send(setting.message)
+      })
 
       ws.send('Fetch time: ' + device.fetchTime)
 
