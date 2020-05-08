@@ -55,7 +55,6 @@ const Devices = (props) => {
           const resJson = await res.json()
 
           const { message, devices } = resJson
-          console.log(devices)
           if (res.status === 200) {
             mutate([
               `${publicRuntimeConfig.API_URL}/api/devices`,

@@ -23,10 +23,10 @@ export default class DeviceService {
   }
 
   static async remove(id) {
-    return await DeviceData.destroy({ where: { id } })
+    return await DeviceSetting.destroy({ where: { id } })
   }
 
-  static async update(deviceData, id) {
-    return await DeviceData.update(deviceData, { where: { id } })
+  static async update(settingData, id) {
+    return await DeviceSetting.update(settingData, { where: { id } })
   }
 }

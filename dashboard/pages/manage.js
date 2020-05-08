@@ -31,7 +31,10 @@ const { Title } = Typography
 
 const Manage = (props) => {
   const [form] = Form.useForm()
-  const [visible, setVisible] = useState(false)
+  const [modalSettings, setModalSettings] = useState({
+    visible: false,
+    deviceId: null,
+  })
 
   const { data: devices } = useSWR(
     [`${publicRuntimeConfig.API_URL}/api/devices`, 'GET', props.token],
@@ -52,10 +55,38 @@ const Manage = (props) => {
     return <Loading />
   }
 
-  const submitSetting = async (id) => {
+  const removeSetting = async (id) => {
+    try {
+      const res = await fetch(
+        `${publicRuntimeConfig.API_URL}/api/settings/${id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: { Authorization: props.token },
+        }
+      )
+      const resJson = await res.json()
+
+      const { message, settings } = resJson
+      if (res.status === 200) {
+        mutate([
+          `${publicRuntimeConfig.API_URL}/api/settings`,
+          'GET',
+          props.token,
+        ])
+        notification('success', message)
+      } else {
+        notification('error', message)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const submitSetting = async () => {
     try {
       const values = await form.validateFields()
-      values.deviceId = id
+      values.deviceId = modalSettings.deviceId
       form.resetFields()
       const res = await fetch(`${publicRuntimeConfig.API_URL}/api/settings`, {
         method: 'POST',
@@ -77,7 +108,10 @@ const Manage = (props) => {
       } else {
         notification('error', message)
       }
-      setVisible(false)
+      setModalSettings({
+        ...modalSettings,
+        visible: false,
+      })
     } catch (err) {
       console.log(err)
     }
@@ -141,35 +175,41 @@ const Manage = (props) => {
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
-            {settings.map((setting) => (
-              <Col span={4}>
-                <Card
-                  style={{
-                    height: 150,
-                    width: 250,
-                  }}
-                  type="primary"
-                >
-                  <Row justify="center">
-                    <p>
-                      <SettingOutlined />
-                      &nbsp;
-                      {setting.message}
-                    </p>
-                  </Row>
-                  <Row gutter={16} style={{ margin: 0 }} justify="center">
-                    <Col>
-                      <Button type="primary">Send</Button>
-                    </Col>
-                    <Col>
-                      <Button type="primary" danger>
-                        Delete
-                      </Button>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            ))}
+            {settings
+              .filter((setting) => setting.Device.id === device.id)
+              .map((setting) => (
+                <Col span={4}>
+                  <Card
+                    style={{
+                      height: 150,
+                      width: 250,
+                    }}
+                    type="primary"
+                  >
+                    <Row justify="center">
+                      <p>
+                        <SettingOutlined />
+                        &nbsp;
+                        {setting.message}
+                      </p>
+                    </Row>
+                    <Row gutter={16} style={{ margin: 0 }} justify="center">
+                      <Col>
+                        <Button type="primary">Send</Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          onClick={() => removeSetting(setting.id)}
+                          type="primary"
+                          danger
+                        >
+                          Delete
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              ))}
             <Col span={4}>
               <Button
                 style={{
@@ -178,39 +218,50 @@ const Manage = (props) => {
                   background: 'none',
                   border: '1px dashed',
                 }}
-                onClick={() => setVisible(true)}
+                onClick={() =>
+                  setModalSettings({
+                    ...modalSettings,
+                    deviceId: device.id,
+                    visible: true,
+                  })
+                }
                 icon={<PlusOutlined />}
               >
                 Add setting
               </Button>
-              <Modal
-                visible={visible}
-                title="Add Setting"
-                okText="Add"
-                cancelText="Cancel"
-                onCancel={() => setVisible(false)}
-                onOk={() => submitSetting(device.id)}
-              >
-                <Form form={form} layout="vertical" name="form-add-setting">
-                  <Form.Item
-                    name="message"
-                    help="The message that will be send to the device."
-                    label="Message"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please input a message',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Form>
-              </Modal>
             </Col>
           </Row>
         </div>
       ))}
+      <Modal
+        visible={modalSettings.visible}
+        title="Add Setting"
+        okText="Add"
+        cancelText="Cancel"
+        onCancel={() =>
+          setModalSettings({
+            ...modalSettings,
+            visible: false,
+          })
+        }
+        onOk={submitSetting}
+      >
+        <Form form={form} layout="vertical" name="form-add-setting">
+          <Form.Item
+            name="message"
+            help="The message that will be send to the device."
+            label="Message"
+            rules={[
+              {
+                required: true,
+                message: 'Please input a message',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Wrapper>
   )
 }

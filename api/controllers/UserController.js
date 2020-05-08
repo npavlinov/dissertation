@@ -15,7 +15,7 @@ export default class UserController {
     }
 
     const user = await UserService.create(req.body)
-    const token = auth.signToken(user.id)
+    const token = auth.signToken(user)
 
     res.status(200).send({ auth: true, token, message: 'User Registered!' })
   }
