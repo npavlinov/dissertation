@@ -55,6 +55,28 @@ const Manage = (props) => {
     return <Loading />
   }
 
+  const sendSetting = async (setting) => {
+    try {
+      const res = await fetch(`${publicRuntimeConfig.API_URL}/api/sockets`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: props.token,
+        },
+        body: JSON.stringify(setting),
+      })
+
+      if (res.status === 200) {
+        notification('success', 'Setting Sent!')
+      } else {
+        notification('error', 'Something went wrong!')
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const removeSetting = async (id) => {
     try {
       const res = await fetch(
@@ -67,7 +89,7 @@ const Manage = (props) => {
       )
       const resJson = await res.json()
 
-      const { message, settings } = resJson
+      const { message } = resJson
       if (res.status === 200) {
         mutate([
           `${publicRuntimeConfig.API_URL}/api/settings`,
@@ -195,7 +217,12 @@ const Manage = (props) => {
                     </Row>
                     <Row gutter={16} style={{ margin: 0 }} justify="center">
                       <Col>
-                        <Button type="primary">Send</Button>
+                        <Button
+                          onClick={() => sendSetting(setting)}
+                          type="primary"
+                        >
+                          Send
+                        </Button>
                       </Col>
                       <Col>
                         <Button

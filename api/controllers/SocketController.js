@@ -2,6 +2,9 @@
 
 import DeviceService from '../services/DeviceService'
 import DeviceDataService from '../services/DeviceDataService'
+import events from 'events'
+
+const eventEmitter = new events.EventEmitter()
 /**
  * This class is a Controller for the websocket server,
  * which will act as a connection between the devices and the dashboard
@@ -60,9 +63,20 @@ export default class SocketController {
         console.log('Connection lost')
       })
 
+      event.on('sendSetting', (setting) => {})
+
       ws.send('Fetch time: ' + device.fetchTime)
 
       console.log('new client connected')
     })
+  }
+
+  static async sendMessage(req, res) {
+    try {
+      console.log(req.body)
+      event.emit('sendSetting', req.body)
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
