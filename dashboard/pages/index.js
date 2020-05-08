@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import {
   Card,
@@ -12,7 +11,6 @@ import {
   Divider,
   Empty,
 } from 'antd'
-import 'antd/dist/antd.css'
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 import Link from 'next/link'
 import Wrapper from '../components/Wrapper'
@@ -71,11 +69,7 @@ const Home = (props) => {
 
   return (
     <div>
-      <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper>
+      <Wrapper title="Home">
         <Row
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ marginTop: '50px' }}

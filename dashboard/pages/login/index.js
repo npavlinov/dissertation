@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import Wrapper from '../../components/Wrapper'
@@ -7,7 +6,6 @@ import { Form, Input, Button, Checkbox, Row, Card } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
-import 'antd/dist/antd.css'
 import './login.css'
 
 const { publicRuntimeConfig } = getConfig()
@@ -37,11 +35,7 @@ function Login(props) {
 
   return (
     <div>
-      <Head>
-        <title>Login</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper noNav>
+      <Wrapper noNav title="Login">
         <div className="site-card-border-less-wrapper">
           <Card style={{ margin: '30px auto' }}>
             <Form onFinish={handleSubmit} className="login-form">
