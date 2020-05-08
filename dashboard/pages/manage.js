@@ -51,7 +51,7 @@ const Manage = (props) => {
     fetcher
   )
 
-  if (!devices || !devicesData) {
+  if (!devices || !devicesData || !settings) {
     return <Loading />
   }
 

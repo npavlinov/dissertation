@@ -24,10 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', routes)
 
-app.get('/api/ping', (req, res) => {
-  res.json({ msg: 'pong' })
-})
-
 SocketController.runSockets(wss)
 
 export default app
