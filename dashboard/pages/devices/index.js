@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
@@ -10,7 +10,6 @@ import {
   EditOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
-import 'antd/dist/antd.css'
 import Wrapper from '../../components/Wrapper'
 import WithAuth from '../../components/WithAuth'
 import Loading from '../../components/Loading'
@@ -56,7 +55,6 @@ const Devices = (props) => {
           const resJson = await res.json()
 
           const { message, devices } = resJson
-          console.log(devices)
           if (res.status === 200) {
             mutate([
               `${publicRuntimeConfig.API_URL}/api/devices`,

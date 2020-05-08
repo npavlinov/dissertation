@@ -1,26 +1,21 @@
 'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('DeviceData', {
+    return queryInterface.createTable('DeviceSettings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      fetchTime: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      data: {
-        type: Sequelize.JSON,
+      message: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
       deviceId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: 'cascade',
         references: {
           model: 'Devices',
           key: 'id',
@@ -37,6 +32,6 @@ module.exports = {
     })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('DeviceData')
+    return queryInterface.dropTable('DeviceSettings')
   },
 }

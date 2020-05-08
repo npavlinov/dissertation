@@ -9,11 +9,13 @@ export default class UserController {
     const checkUser = await UserService.getOne({ username })
 
     if (checkUser) {
-      return res.send('User with such username already exists.')
+      return res
+        .status(500)
+        .send({ message: 'User with such username already exists.' })
     }
 
     const user = await UserService.create(req.body)
-    const token = auth.signToken(user.id)
+    const token = auth.signToken(user)
 
     res.status(200).send({ auth: true, token, message: 'User Registered!' })
   }

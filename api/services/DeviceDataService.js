@@ -12,22 +12,26 @@ export default class DeviceService {
   }
 
   static async getAll(args, limit) {
-    const devices = await Device.findAll({
-      where: args,
-    })
-    const devicesData = await Promise.all(
-      devices.map(async (device) => {
-        return await device
-          .getDeviceData({
-            limit: limit || null,
-            order: [['createdAt', 'DESC']],
-            attributes: ['data'],
-            raw: true,
-          })
-          .map((device) => device.data)
+    try {
+      const devices = await Device.findAll({
+        where: args,
       })
-    )
-    return devicesData
+      const devicesData = await Promise.all(
+        devices.map(async (device) => {
+          return await device
+            .getDeviceData({
+              limit: limit || null,
+              order: [['createdAt', 'DESC']],
+              attributes: ['data'],
+              raw: true,
+            })
+            .map((device) => device.data)
+        })
+      )
+      return devicesData
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   static async remove(id) {

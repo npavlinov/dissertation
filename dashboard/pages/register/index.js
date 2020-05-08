@@ -7,7 +7,6 @@ import { Form, Input, Button, Checkbox, Row, Card } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
-import 'antd/dist/antd.css'
 
 const { publicRuntimeConfig } = getConfig()
 

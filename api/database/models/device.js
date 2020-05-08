@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     Device.hasMany(models.DeviceData, {
       foreignKey: 'deviceId',
     })
+    Device.hasMany(models.DeviceSetting, {
+      foreignKey: 'deviceId',
+    })
   }
   return Device
 }

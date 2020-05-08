@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Navbar from './Navbar'
 import { Layout } from 'antd'
 
@@ -5,6 +6,10 @@ const { Content, Footer } = Layout
 
 const Wrapper = (props) => (
   <div>
+    <Head>
+      <title>{props.title}</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
     <Layout style={{ minHeight: '100vh' }}>
       {props.noNav ? '' : <Navbar />}
       <Layout>

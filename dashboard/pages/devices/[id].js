@@ -5,7 +5,6 @@ import fetch from 'isomorphic-unfetch'
 import useSWR from 'swr'
 
 import { Typography } from 'antd'
-import 'antd/dist/antd.css'
 
 import Wrapper from '../../components/Wrapper'
 import DeviceForm from '../../components/DeviceForm'
