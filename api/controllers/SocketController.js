@@ -41,10 +41,11 @@ export default class SocketController {
       }
 
       sockets[requestIp] = ws
-      // console.log(sockets)
+
       // get device per IP
       const device = await DeviceService.getOne({ ip: requestIp })
-
+      await DeviceService.update({ connected: true }, device.id)
+      // when a message is received, parse it and save it to DB
       ws.on('message', async (message) => {
         try {
           const messageJson = JSON.parse(message)
@@ -62,12 +63,13 @@ export default class SocketController {
         }
       })
 
-      ws.on('close', () => {
+      ws.on('close', async () => {
+        await DeviceService.update({ connected: false }, device.id)
         console.log('Connection lost')
       })
 
+      // if user wants to send a message to device, send it
       event.on('sendSetting', (setting) => {
-        // console.log(setting)
         const socketToSendTo = sockets[setting.Device.ip]
         socketToSendTo.send(setting.message)
       })
@@ -78,10 +80,15 @@ export default class SocketController {
     })
   }
 
+  /**
+   * This method emits an event, that will send a message to device
+   * @param {Object} req
+   * @param {Object} res
+   */
   static async sendMessage(req, res) {
     try {
-      console.log(req.body)
       event.emit('sendSetting', req.body)
+      res.send(200)
     } catch (err) {
       console.log(err)
     }
