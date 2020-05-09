@@ -11,7 +11,7 @@ export default class DeviceService {
     })
   }
 
-  static async getAll(args, limit) {
+  static async getAll(args, limit, order = 'desc') {
     try {
       const devices = await Device.findAll({
         where: args,
@@ -21,7 +21,7 @@ export default class DeviceService {
           return await device
             .getDeviceData({
               limit: limit || null,
-              order: [['createdAt', 'DESC']],
+              order: [['createdAt', order]],
               attributes: ['data'],
               raw: true,
             })

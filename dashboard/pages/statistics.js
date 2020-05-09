@@ -75,8 +75,9 @@ const Statistics = (props) => {
   )
 
   const { data: devicesData } = useSWR(
-    [`${publicRuntimeConfig.API_URL}/api/data`, 'GET', props.token],
-    fetcherDevices
+    [`${publicRuntimeConfig.API_URL}/api/data?order=asc`, 'GET', props.token],
+    fetcherDevices,
+    { refreshInterval: 30000 }
   )
 
   if (!devices || !devicesData) {
