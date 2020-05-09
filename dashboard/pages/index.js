@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import dynamic from 'next/dynamic'
 import {
   Card,
   Col,
@@ -10,8 +9,8 @@ import {
   Statistic,
   Divider,
   Empty,
+  List,
 } from 'antd'
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 import Link from 'next/link'
 import Wrapper from '../components/Wrapper'
 import WithAuth from '../components/WithAuth'
@@ -19,6 +18,7 @@ import Loading from '../components/Loading'
 
 import getConfig from 'next/config'
 import time from '../utils/time'
+import { camelToNormal, addSuffix } from '../utils/convertText'
 import fetcher from '../utils/fetcher'
 import useSWR from 'swr'
 
@@ -34,24 +34,6 @@ const { TabPane } = Tabs
 const { publicRuntimeConfig } = getConfig()
 
 const Home = (props) => {
-  const [donutChart, setDonutChart] = useState({
-    series: [0],
-    options: {
-      chart: {
-        height: 350,
-        type: 'radialBar',
-      },
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            size: '70%',
-          },
-        },
-      },
-      labels: ['Active Devices'],
-    },
-  })
-
   // We need both of these calls, since some of the devices may not have data
   const { data: devices } = useSWR(
     [`${publicRuntimeConfig.API_URL}/api/devices`, 'GET', props.token],
@@ -59,7 +41,7 @@ const Home = (props) => {
   )
 
   const { data: devicesData } = useSWR(
-    [`${publicRuntimeConfig.API_URL}/api/data?limit=1`, 'GET', props.token],
+    [`${publicRuntimeConfig.API_URL}/api/data?limit=3`, 'GET', props.token],
     fetcher
   )
 
@@ -136,13 +118,28 @@ const Home = (props) => {
           style={{ marginTop: '50px' }}
         >
           <Col span={8} className="gutter-row">
-            <Card>
-              <Chart
-                options={donutChart.options}
-                series={[devices.filter((device) => device.connected).length]}
-                type="radialBar"
-                height={350}
-              />
+            <Card title="Last 3 received readings">
+              <Tabs tabPosition="top" size="large">
+                {devices.map((device, id) => (
+                  <TabPane tab={device.name} key={device.id}>
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={devicesData[id]}
+                      renderItem={(item) => (
+                        <List.Item>
+                          {Object.keys(item).map((reading) => (
+                            <Statistic
+                              suffix={addSuffix(reading)}
+                              title={camelToNormal(reading)}
+                              value={item[reading]}
+                            />
+                          ))}
+                        </List.Item>
+                      )}
+                    />
+                  </TabPane>
+                ))}
+              </Tabs>
             </Card>
           </Col>
 
