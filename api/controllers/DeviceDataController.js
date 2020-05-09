@@ -7,7 +7,8 @@ export default class DeviceController {
     try {
       const data = await DeviceDataService.getAll(
         { username: req.username },
-        req.query.limit
+        req.query.limit,
+        req.query.order
       )
       res.status(200).send(data)
     } catch (err) {

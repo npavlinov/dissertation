@@ -23,6 +23,25 @@ export default class SocketController {
    */
   static async runSockets(wss) {
     let sockets = {}
+
+    /* check if connection is broken, code taken from
+      ref: https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
+    */
+    function noop() {}
+
+    function heartbeat() {
+      this.isAlive = true
+    }
+
+    const interval = setInterval(function ping() {
+      wss.clients.forEach(function each(ws) {
+        if (ws.isAlive === false) return ws.terminate()
+
+        ws.isAlive = false
+        ws.ping(noop)
+      })
+    }, 30000)
+
     wss.on('connection', async (ws, req) => {
       // get all devices
       const devices = await DeviceService.getAll({})
@@ -39,6 +58,9 @@ export default class SocketController {
         console.log('Device is not present in the database')
         return
       }
+
+      ws.isAlive = true
+      ws.on('pong', heartbeat)
 
       sockets[requestIp] = ws
 
@@ -65,6 +87,7 @@ export default class SocketController {
 
       ws.on('close', async () => {
         await DeviceService.update({ connected: false }, device.id)
+        clearInterval(interval)
         console.log('Connection lost')
       })
 
@@ -75,7 +98,6 @@ export default class SocketController {
       })
 
       ws.send('Fetch time: ' + device.fetchTime)
-
       console.log('new client connected')
     })
   }
