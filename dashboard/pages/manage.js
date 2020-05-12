@@ -5,6 +5,7 @@ import WithAuth from '../components/WithAuth'
 import Wrapper from '../components/Wrapper'
 import Loading from '../components/Loading'
 import notification from '../utils/notification'
+import { camelToNormal, addSuffix, addPrefix } from '../utils/convertText'
 import fetcher from '../utils/fetcher'
 import fetch from 'isomorphic-unfetch'
 import {
@@ -18,13 +19,7 @@ import {
   Input,
   Card,
 } from 'antd'
-import {
-  ExperimentOutlined,
-  ControlOutlined,
-  FireOutlined,
-  PlusOutlined,
-  SettingOutlined,
-} from '@ant-design/icons'
+import { PlusOutlined, SettingOutlined } from '@ant-design/icons'
 
 const { publicRuntimeConfig } = getConfig()
 const { Title } = Typography
@@ -144,55 +139,29 @@ const Manage = (props) => {
       {devices.map((device, i) => (
         <div>
           <Row>
-            <Col span={12}>
+            <Col sm={24} md={12}>
               <Title level={3} style={{ fontWeight: '500', lineHeight: 3 }}>
                 {device.name}
               </Title>
             </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={6}>
-                  <Statistic
-                    title="pH"
-                    value={devicesData[i].length ? devicesData[i][0].pH : '-'}
-                    prefix={<ExperimentOutlined />}
-                  />
-                </Col>
-                <Col span={6}>
-                  <Statistic
-                    title="Water levels"
-                    value={
-                      devicesData[i].length
-                        ? devicesData[i][0].waterLevels
-                        : '-'
-                    }
-                    prefix={<ControlOutlined />}
-                  />
-                </Col>
-                <Col span={6}>
-                  <Statistic
-                    title="Water temp."
-                    value={
-                      devicesData[i].length
-                        ? devicesData[i][0].waterTemperature
-                        : '-'
-                    }
-                    prefix={<FireOutlined />}
-                    suffix="&#176;C"
-                  />
-                </Col>
-                <Col span={6}>
-                  <Statistic
-                    title="Air temp."
-                    value={
-                      devicesData[i].length
-                        ? devicesData[i][0].airTemperature
-                        : '-'
-                    }
-                    prefix={<FireOutlined />}
-                    suffix="&#176;C"
-                  />
-                </Col>
+            <Col
+              lg={12}
+              md={24}
+              style={{ textAlign: 'center', padding: '24px 0' }}
+            >
+              <Row gutter={24} justify="center">
+                {devicesData[i].length
+                  ? Object.keys(devicesData[i][0]).map((reading) => (
+                      <Col sm={24} md={12} lg={6}>
+                        <Statistic
+                          suffix={addSuffix(reading)}
+                          prefix={addPrefix(reading)}
+                          title={camelToNormal(reading)}
+                          value={devicesData[i][0][reading]}
+                        />
+                      </Col>
+                    ))
+                  : null}
               </Row>
             </Col>
           </Row>
@@ -200,7 +169,7 @@ const Manage = (props) => {
             {settings
               .filter((setting) => setting.Device.id === device.id)
               .map((setting) => (
-                <Col span={4}>
+                <Col sm={24} md={12} lg={6}>
                   <Card
                     style={{
                       height: 150,
@@ -237,7 +206,7 @@ const Manage = (props) => {
                   </Card>
                 </Col>
               ))}
-            <Col span={4}>
+            <Col sm={24} md={12} lg={6}>
               <Button
                 style={{
                   height: 150,

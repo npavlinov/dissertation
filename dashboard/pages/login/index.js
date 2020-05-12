@@ -2,12 +2,13 @@ import React from 'react'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import Wrapper from '../../components/Wrapper'
-import { Form, Input, Button, Checkbox, Row, Card } from 'antd'
+import { Form, Input, Button, Card, Typography } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
 import './login.css'
 
+const { Title } = Typography
 const { publicRuntimeConfig } = getConfig()
 
 function Login(props) {
@@ -37,6 +38,9 @@ function Login(props) {
     <div>
       <Wrapper noNav title="Login">
         <div className="site-card-border-less-wrapper">
+          <Title style={{ textAlign: 'center' }} level={1}>
+            Log In
+          </Title>
           <Card style={{ margin: '30px auto' }}>
             <Form onFinish={handleSubmit} className="login-form">
               <Form.Item

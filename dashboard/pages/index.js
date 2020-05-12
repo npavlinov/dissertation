@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
 import {
   Card,
   Col,
   Row,
   Typography,
-  Space,
   Tabs,
   Statistic,
   Divider,
   Empty,
   List,
+  Avatar,
 } from 'antd'
 import Link from 'next/link'
 import Wrapper from '../components/Wrapper'
@@ -18,7 +17,7 @@ import Loading from '../components/Loading'
 
 import getConfig from 'next/config'
 import time from '../utils/time'
-import { camelToNormal, addSuffix } from '../utils/convertText'
+import { camelToNormal, addSuffix, addPrefix } from '../utils/convertText'
 import fetcher from '../utils/fetcher'
 import useSWR from 'swr'
 
@@ -30,6 +29,7 @@ import {
 } from '@ant-design/icons'
 const { Title } = Typography
 const { TabPane } = Tabs
+const { Meta } = Card
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -52,17 +52,19 @@ const Home = (props) => {
   return (
     <div>
       <Wrapper title="Home">
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ marginTop: '50px' }}
-        >
-          <Col span={8} style={{ textAlign: 'center' }} className="gutter-row">
+        <Row gutter={16} style={{ marginTop: '50px' }}>
+          <Col
+            md={24}
+            lg={8}
+            style={{ textAlign: 'center' }}
+            className="gutter-row"
+          >
             <Title>Hello, {props.firstName}</Title>
             <Title level={3} style={{ fontWeight: '300' }}>
               This is your dashboard
             </Title>
           </Col>
-          <Col span={8} className="gutter-row">
+          <Col md={24} lg={8} className="gutter-row">
             <Card
               bordered={false}
               actions={[
@@ -74,25 +76,32 @@ const Home = (props) => {
                 </Link>,
               ]}
             >
-              <Space>
-                <UsbFilled style={{ fontSize: '64px', color: '#011529' }} />
-                <Title level={2} style={{ margin: '0 10px' }}>
-                  {devices.length} Devices
-                </Title>
-                <Title
-                  level={3}
-                  style={{
-                    color: '#1890fe',
-                    fontWeight: '400',
-                    margin: '10px 0',
-                  }}
-                >
-                  ({devices.filter((device) => device.connected).length} active)
-                </Title>
-              </Space>
+              <Row justify="center" gutter={16}>
+                <Col>
+                  <UsbFilled style={{ fontSize: '64px', color: '#011529' }} />
+                </Col>
+                <Col>
+                  <Title level={3} style={{ lineHeight: 2 }}>
+                    {devices.length} Devices
+                  </Title>
+                </Col>
+                <Col>
+                  <Title
+                    level={3}
+                    style={{
+                      color: '#1890fe',
+                      fontWeight: '400',
+                      lineHeight: 2,
+                    }}
+                  >
+                    ({devices.filter((device) => device.connected).length}{' '}
+                    active)
+                  </Title>
+                </Col>
+              </Row>
             </Card>
           </Col>
-          <Col span={8} className="gutter-row">
+          <Col sm={0} md={24} lg={8} className="gutter-row">
             <Card
               bordered={false}
               actions={[
@@ -104,12 +113,18 @@ const Home = (props) => {
                 </Link>,
               ]}
             >
-              <Space>
-                <ControlFilled style={{ fontSize: '64px', color: '#011529' }} />
-                <Title level={2} style={{ margin: '0 10px' }}>
-                  Management
-                </Title>
-              </Space>
+              <Row justify="center" gutter={16}>
+                <Col>
+                  <ControlFilled
+                    style={{ fontSize: '64px', color: '#011529' }}
+                  />
+                </Col>
+                <Col>
+                  <Title level={2} style={{ lineHeight: 2 }}>
+                    Manage
+                  </Title>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>
@@ -117,9 +132,9 @@ const Home = (props) => {
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ marginTop: '50px' }}
         >
-          <Col span={8} className="gutter-row">
+          <Col sm={0} md={24} lg={8} className="gutter-row">
             <Card title="Last 3 received readings">
-              <Tabs tabPosition="top" size="large">
+              <Tabs tabPosition="top">
                 {devices.map((device, id) => (
                   <TabPane tab={device.name} key={device.id}>
                     <List
@@ -143,7 +158,7 @@ const Home = (props) => {
             </Card>
           </Col>
 
-          <Col span={16} className="gutter-row">
+          <Col md={24} lg={16} className="gutter-row">
             <Card
               actions={[
                 <Link href={`/manage`}>
@@ -187,30 +202,16 @@ const Home = (props) => {
                         gutter={16}
                         style={{ textAlign: 'center', margin: '20px 0' }}
                       >
-                        <Col span={6}>
-                          <Statistic
-                            title="pH Levels"
-                            value={devicesData[id][0].pH}
-                          />
-                        </Col>
-                        <Col span={6}>
-                          <Statistic
-                            title="Water Levels"
-                            value={devicesData[id][0].waterLevels}
-                          />
-                        </Col>
-                        <Col span={6}>
-                          <Statistic
-                            title="Water Temperature"
-                            value={devicesData[id][0].waterTemperature}
-                          />
-                        </Col>
-                        <Col span={6}>
-                          <Statistic
-                            title="Air Temperature"
-                            value={devicesData[id][0].airTemperature}
-                          />
-                        </Col>
+                        {Object.keys(devicesData[id][0]).map((reading) => (
+                          <Col span={6}>
+                            <Statistic
+                              suffix={addSuffix(reading)}
+                              prefix={addPrefix(reading)}
+                              title={camelToNormal(reading)}
+                              value={devicesData[id][0][reading]}
+                            />
+                          </Col>
+                        ))}
                       </Row>
                     ) : (
                       <Empty />

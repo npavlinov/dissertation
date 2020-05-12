@@ -1,14 +1,14 @@
 import React from 'react'
-import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import Wrapper from '../../components/Wrapper'
-import { Form, Input, Button, Checkbox, Row, Card } from 'antd'
+import { Form, Input, Button, Card, Typography } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login } from '../../utils/auth'
 import notification from '../../utils/notification'
 
 const { publicRuntimeConfig } = getConfig()
+const { Title } = Typography
 
 function Register(props) {
   const handleSubmit = async (values) => {
@@ -35,12 +35,11 @@ function Register(props) {
 
   return (
     <div>
-      <Head>
-        <title>Register</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper noNav>
+      <Wrapper noNav title="Register">
         <div className="site-card-border-less-wrapper">
+          <Title style={{ textAlign: 'center' }} level={1}>
+            Register
+          </Title>
           <Card style={{ margin: '30px auto' }}>
             <Form onFinish={handleSubmit} className="register-form">
               <Form.Item

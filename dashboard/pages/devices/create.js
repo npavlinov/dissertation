@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import { Typography } from 'antd'
@@ -36,11 +35,7 @@ const AddDevice = (props) => {
 
   return (
     <div>
-      <Head>
-        <title>Add Device</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper>
+      <Wrapper title="Add Device">
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Title level={2}>Add Device</Title>
           <DeviceForm handleSubmit={handleSubmit} />
