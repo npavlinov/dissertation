@@ -97,7 +97,7 @@ export default class DeviceController {
   static async destroy(req, res) {
     try {
       await DeviceService.remove(req.params.id)
-      const devices = await DeviceService.getAll({ uuserId: req.id })
+      const devices = await DeviceService.getAll({ userId: req.id })
       res.status(200).send({ devices, message: 'Device Deleted!' })
     } catch (err) {
       console.log(err)

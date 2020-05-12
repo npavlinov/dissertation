@@ -32,6 +32,7 @@ export default class DeviceService {
   static async getAll(args) {
     return await Device.findAll({
       where: args,
+      order: [['createdAt', 'asc']],
       attributes: ['name', 'ip', 'connected', 'fetchTime', 'id'],
     })
   }

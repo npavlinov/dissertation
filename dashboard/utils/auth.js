@@ -23,5 +23,5 @@ export const login = (token) => {
 export const logout = () => {
   cookie.remove('token')
   window.localStorage.setItem('logout', Date.now())
-  Router.push('/login')
+  // Router.push('/login')
 }

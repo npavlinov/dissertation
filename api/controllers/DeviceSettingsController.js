@@ -2,7 +2,7 @@
 
 import DeviceSettingsService from '../services/DeviceSettingsService'
 
-export default class DeviceController {
+export default class DeviceSettingsController {
   static async create(req, res) {
     const settingData = {
       deviceId: req.body.deviceId,
