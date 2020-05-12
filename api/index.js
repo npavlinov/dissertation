@@ -6,7 +6,7 @@ import routes from './routes'
 import SocketController from './controllers/SocketController'
 
 const app = express()
-const wss = new WebSocket.Server({ port: 8080 })
+const wss = new WebSocket.Server({ port: 80 })
 
 app.use(
   cors({

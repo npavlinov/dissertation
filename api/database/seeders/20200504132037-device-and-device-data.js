@@ -9,7 +9,7 @@ module.exports = {
             ip: '192.168.0.109',
             createdAt: new Date(),
             updatedAt: new Date(),
-            username: 'npavlinov',
+            userId: 2,
             fetchTime: 300,
           },
         ],

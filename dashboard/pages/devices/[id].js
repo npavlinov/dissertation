@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import getConfig from 'next/config'
 import fetch from 'isomorphic-unfetch'
@@ -56,11 +55,7 @@ const Device = (props) => {
 
   return (
     <div>
-      <Head>
-        <title>Edit Device</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper>
+      <Wrapper title={`Edit ${data.name}`}>
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Title level={2}>Edit Device: {data.name}</Title>
           <DeviceForm handleSubmit={handleSubmit} device={data} />

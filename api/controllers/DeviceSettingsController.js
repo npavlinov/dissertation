@@ -29,7 +29,7 @@ export default class DeviceController {
   static async getAll(req, res) {
     try {
       const settings = await DeviceSettingsService.getAll({
-        username: req.username,
+        userId: req.id,
       })
       res.status(200).send(settings)
     } catch (err) {
@@ -50,7 +50,7 @@ export default class DeviceController {
     try {
       await DeviceSettingsService.remove(req.params.id)
       const settings = await DeviceSettingsService.getAll({
-        username: req.username,
+        userId: req.id,
       })
       res.status(200).send({ settings, message: 'Device Deleted!' })
     } catch (err) {

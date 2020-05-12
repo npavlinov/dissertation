@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import fetch from 'isomorphic-unfetch'
 import getConfig from 'next/config'
 import useSWR, { mutate } from 'swr'
@@ -54,7 +53,7 @@ const Devices = (props) => {
           )
           const resJson = await res.json()
 
-          const { message, devices } = resJson
+          const { message } = resJson
           if (res.status === 200) {
             mutate([
               `${publicRuntimeConfig.API_URL}/api/devices`,
@@ -77,11 +76,7 @@ const Devices = (props) => {
 
   return (
     <div>
-      <Head>
-        <title>Devices</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper>
+      <Wrapper title="Devices">
         <Title level={2}>Devices</Title>
         <div style={{ marginBottom: 16 }}>
           <Button type="primary" icon={<PlusOutlined />} href="/devices/create">

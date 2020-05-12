@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       ip: DataTypes.STRING,
       connected: DataTypes.BOOLEAN,
-      username: DataTypes.STRING,
+      userId: DataTypes.INTEGER,
       fetchTime: DataTypes.INTEGER,
     },
     {}
@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     })
     Device.hasMany(models.DeviceSetting, {
       foreignKey: 'deviceId',
+    })
+    Device.belongsTo(models.User, {
+      foreignKey: 'userId',
     })
   }
   return Device
