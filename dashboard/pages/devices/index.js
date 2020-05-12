@@ -33,7 +33,6 @@ const Devices = (props) => {
   }
 
   const showDeleteModal = (e, id) => {
-    console.log(data)
     confirm({
       title: 'Are you sure you want to delete this device?',
       icon: <ExclamationCircleOutlined />,
@@ -79,7 +78,12 @@ const Devices = (props) => {
       <Wrapper title="Devices">
         <Title level={2}>Devices</Title>
         <div style={{ marginBottom: 16 }}>
-          <Button type="primary" icon={<PlusOutlined />} href="/devices/create">
+          <Button
+            data-cy="add-device"
+            type="primary"
+            icon={<PlusOutlined />}
+            href="/devices/create"
+          >
             Add
           </Button>
         </div>
@@ -125,6 +129,7 @@ const Devices = (props) => {
               <Space>
                 <Tooltip title="edit">
                   <Button
+                    data-cy={`edit-device-${record.key}`}
                     type="primary"
                     shape="circle"
                     icon={<EditOutlined />}
@@ -133,6 +138,7 @@ const Devices = (props) => {
                 </Tooltip>
                 <Tooltip title="delete">
                   <Button
+                    data-cy={`delete-device-${record.key}`}
                     danger
                     type="primary"
                     shape="circle"

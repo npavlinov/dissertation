@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import { Form, Select, Input, Button, Row, Col } from 'antd'
 
 const { Option } = Select
@@ -18,13 +19,13 @@ function DeviceForm(props) {
 
   const handleSubmit = async (values) => {
     await props.handleSubmit(values)
+    Router.push('/devices')
   }
 
   return (
     <Row justify="center" style={{ margin: '30px 0' }}>
       <Col span={12}>
         <Form
-          // {...layout}
           onFinish={handleSubmit}
           className="device-form"
           validateMessages={validateMessages}
@@ -39,7 +40,11 @@ function DeviceForm(props) {
           }
         >
           <Form.Item name="name" rules={[{ required: true }]}>
-            <Input size="large" placeholder={props.device ? '' : 'Name'} />
+            <Input
+              data-cy="device-name"
+              size="large"
+              placeholder={props.device ? '' : 'Name'}
+            />
           </Form.Item>
           <Form.Item
             name="ip"
@@ -51,10 +56,22 @@ function DeviceForm(props) {
               },
             ]}
           >
-            <Input size="large" placeholder={props.device ? '' : 'IP'} />
+            <Input
+              size="large"
+              data-cy="device-ip"
+              placeholder={props.device ? '' : 'IP'}
+            />
           </Form.Item>
-          <Form.Item name="fetchTime" rules={[{ required: true }]}>
-            <Select size="large" placeholder={props.device ? '' : 'Fetch Time'}>
+          <Form.Item
+            data-cy="device-time"
+            name="fetchTime"
+            rules={[{ required: true }]}
+          >
+            <Select
+              readOnly={false}
+              size="large"
+              placeholder={props.device ? '' : 'Fetch Time'}
+            >
               <Option value="60">1 min</Option>
               <Option value="300">5 min</Option>
               <Option value="3600">1 hour</Option>
@@ -70,6 +87,7 @@ function DeviceForm(props) {
                 size="large"
                 type="primary"
                 htmlType="submit"
+                data-cy="device-submit"
                 className="login-form-button"
               >
                 {props.device ? 'Edit' : 'Add'}

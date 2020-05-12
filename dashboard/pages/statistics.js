@@ -143,6 +143,7 @@ const Statistics = (props) => {
                 </Row>
                 {Object.keys(devicesData[i]).length ? (
                   <Chart
+                    data-cy={`chart-${i}`}
                     options={chartOptions.options}
                     series={deviceSeries[i].series}
                     type="line"
