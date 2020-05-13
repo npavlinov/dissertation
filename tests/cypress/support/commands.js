@@ -38,3 +38,24 @@ Cypress.Commands.add('loginUser', () => {
     cy.setCookie('token', res.body.token)
   })
 })
+
+Cypress.Commands.add('resetInitialDevice', () => {
+  const deviceEditRoute = `${Cypress.env('apiUrl')}/api/devices/1`
+  cy.getCookie('token').then((cookie) => {
+    cy.request({
+      method: 'PATCH',
+      url: deviceEditRoute,
+      body: {
+        fetchTime: '60',
+        name: 'Test Device',
+        ip: '192.168.0.107',
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: cookie.value,
+      },
+    }).then((resp) => {
+      expect(resp.status).to.eq(200)
+    })
+  })
+})

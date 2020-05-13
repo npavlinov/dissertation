@@ -2,6 +2,8 @@ describe('Devices', () => {
   it('User can see device statistics', () => {
     cy.loginUser()
 
+    cy.resetInitialDevice()
+
     const statisticsRoutes = `${Cypress.env('dashboardUrl')}/statistics`
     cy.visit(statisticsRoutes)
 
