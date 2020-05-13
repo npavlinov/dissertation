@@ -19,7 +19,8 @@ export default class DeviceDataController {
       const data = await DeviceDataService.getAll(
         { userId: req.id },
         req.query.limit,
-        req.query.order
+        req.query.order,
+        req.query.time
       )
       res.status(200).send(data)
     } catch (err) {

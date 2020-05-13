@@ -31,7 +31,7 @@ export default class DeviceDataService {
    * @param {*} limit the number of entries that should be returned by the query
    * @param {*} order the sorting order based on the createdAt column
    */
-  static async getAll(args, limit, order = 'desc') {
+  static async getAll(args, limit, order = 'desc', time = 60) {
     try {
       const devices = await Device.findAll({
         where: args,
@@ -45,7 +45,7 @@ export default class DeviceDataService {
               // attributes: ['data'],
               raw: true,
               where: {
-                fetchTime: device.fetchTime,
+                fetchTime: time,
               },
             })
             .map((device) => device.data)
