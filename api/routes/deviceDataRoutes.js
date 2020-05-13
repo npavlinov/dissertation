@@ -7,6 +7,10 @@ import DeviceDataController from '../controllers/DeviceDataController'
 const router = new Router()
 
 router.get('/api/data/:id', verifyToken, DeviceDataController.getOne)
-router.get('/api/data/:limit?:order?', verifyToken, DeviceDataController.getAll)
+router.get(
+  '/api/data/:limit?:order?:time?',
+  verifyToken,
+  DeviceDataController.getAll
+)
 
 export default router

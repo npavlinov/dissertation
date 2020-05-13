@@ -38,7 +38,7 @@ module.exports = {
           .then((devices) => {
             return queryInterface.bulkInsert('DeviceData', [
               {
-                fetchTime: 60,
+                fetchTime: 300,
                 data: JSON.stringify({
                   airTemperature: 34,
                   waterTemperature: 7,
@@ -50,7 +50,7 @@ module.exports = {
                 updatedAt: new Date(),
               },
               {
-                fetchTime: 60,
+                fetchTime: 300,
                 data: JSON.stringify({
                   airTemperature: 14,
                   waterTemperature: 17,

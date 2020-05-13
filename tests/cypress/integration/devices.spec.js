@@ -10,6 +10,7 @@ describe('Devices', () => {
   })
 
   it('User can create a device with correct data', () => {
+    cy.resetInitialDevice()
     /**
      * Ant Design's select component is not an actual HTML select
      * element, thus cypress fails to select it and the workaround is
@@ -26,7 +27,7 @@ describe('Devices', () => {
     cy.get('[data-cy=device-name]').type(Cypress.env('testDeviceName'))
     cy.get('[data-cy=device-ip]').type(Cypress.env('testDeviceIP'))
     cy.get('[data-cy=device-time]').click()
-    cy.contains('1 hour').click()
+    cy.contains(Cypress.env('testDeviceFetchTime')).click()
     cy.get('[data-cy=device-submit]').click()
     cy.location('pathname').should('equal', '/devices')
     cy.get('tr').last().should('contain', Cypress.env('testDeviceName'))
@@ -55,13 +56,13 @@ describe('Devices', () => {
     cy.get('[data-cy=device-name]').clear().type(Cypress.env('testDeviceName'))
     cy.get('[data-cy=device-ip]').clear().type(Cypress.env('testDeviceIP'))
     cy.get('[data-cy=device-time]').click()
-    cy.contains(Cypress.env('testDeviceFetchTime')).click()
+    cy.contains('1 hour').click()
     cy.get('[data-cy=device-submit]').click()
     cy.location('pathname').should('equal', '/devices')
     cy.get('tr')
       .last()
       .should('contain', Cypress.env('testDeviceName'))
-      .and('contain', Cypress.env('testDeviceFetchTime'))
+      .and('contain', '1 hour')
       .and('contain', Cypress.env('testDeviceIP'))
   })
 })

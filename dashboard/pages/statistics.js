@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import WithAuth from '../components/WithAuth'
 import fetch from 'isomorphic-unfetch'
-import Head from 'next/head'
 import dynamic from 'next/dynamic'
 
 import Wrapper from '../components/Wrapper'
 import Loading from '../components/Loading'
 import getConfig from 'next/config'
-import { Tabs, Card, Empty, Row, Col, Statistic } from 'antd'
+import { Tabs, Card, Empty, Row, Col, Statistic, Radio } from 'antd'
 import useSWR from 'swr'
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
@@ -41,6 +40,8 @@ const fetcherDevices = async (url, type, token) => {
 }
 
 const Statistics = (props) => {
+  const [fetchTime, setFetchTime] = useState(60)
+
   const [chartOptions, setChartOptions] = useState({
     options: {
       chart: {
@@ -75,7 +76,11 @@ const Statistics = (props) => {
   )
 
   const { data: devicesData } = useSWR(
-    [`${publicRuntimeConfig.API_URL}/api/data?order=asc`, 'GET', props.token],
+    [
+      `${publicRuntimeConfig.API_URL}/api/data?order=asc&time=${fetchTime}`,
+      'GET',
+      props.token,
+    ],
     fetcherDevices,
     { refreshInterval: 30000 }
   )
@@ -107,14 +112,27 @@ const Statistics = (props) => {
     }
   })
 
+  const timeOptions = [60, 300, 3600, 21600, 43200, 86400]
+
   return (
     <div>
-      <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Wrapper>
+      <Wrapper title="Statistics">
         <Card>
+          <Row>
+            <Col>
+              <p>Fetch time:</p>
+              <Radio.Group
+                value={fetchTime}
+                onChange={(e) => setFetchTime(e.target.value)}
+              >
+                {timeOptions.map((option) => (
+                  <Radio.Button data-cy={`time-${option}`} value={option}>
+                    {time(option)}
+                  </Radio.Button>
+                ))}
+              </Radio.Group>
+            </Col>
+          </Row>
           <Tabs size="large">
             {devices.map((device, i) => (
               <TabPane tab={device.name} key={device.id}>
